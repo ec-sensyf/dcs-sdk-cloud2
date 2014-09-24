@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application id="SDK-TS-cloudtest2"> <!-- application id - you can type any id you want -->
+    <jobTemplates>
+        <jobTemplate id="job1"> <!-- this is the job name -->
+            <streamingExecutable>/application/job_template_1/run</streamingExecutable> <!-- path to the run file of job 1 -->
+	    <defaultParameters>
+              <parameter id="roisa">/application/job_template_2/etc/roisA</parameter>
+	      <parameter id="roisb">/application/job_template_2/etc/roisB</parameter>
+              <parameter type="opensearch" id="bbox" title="Bounding Box" abstract="The bounding box parameter" scope="test" target="geo:box">-11,37,-9,39</parameter> <!-- REGION -->
+            </defaultParameters>
+            <defaultJobconf>
+              <property id="mapred.task.timeout">20000000</property> <!-- number of milliseconds of wall time for the execution of job 1 without reporting -->
+            </defaultJobconf>
+        </jobTemplate>
+	<jobTemplate id="job2"> <!-- this is the job name -->
+            <streamingExecutable>/application/job_template_2/run</streamingExecutable> <!-- path to the run file of job 2 -->
+            <defaultJobconf>
+              <property id="mapred.task.timeout">20000000</property> <!-- number of milliseconds of wall time for the execution of job 2 without reporting -->
+            </defaultJobconf>
+        </jobTemplate>
+        <jobTemplate id="job3"> <!-- this is the job name -->
+            <streamingExecutable>/application/job_template_3/run</streamingExecutable> <!-- path to the run file of job 3 -->
+            <defaultParameters>
+              <parameter id="subject">SenSyF_Automatic_Notification</parameter> <!-- parameter 1 of sensyf-mail - subject -->
+              <parameter id="body">/application/job_template_3/etc/message_body.txt</parameter> <!-- parameter 2 of sensyf-mail - path to the file with message body -->
+              <parameter id="email_address">joao.andrade@deimos.com.pt</parameter> <!-- parameter 3 of sensyf-mail - receiver email address -->
+              <parameter id="attachment">/application/etc/</parameter> <!-- parameter 4 of sensyf-mail - path to an attachment file -->
+            </defaultParameters>
+            <defaultJobconf>
+              <property id="mapred.task.timeout">3600000</property> <!-- number of milliseconds of wall time for the execution of job 3 without reporting -->
+              <property id="ciop.job.max.tasks">1</property> <!-- maximum number of taks for the job 3 -->
+            </defaultJobconf>
+        </jobTemplate>
+    </jobTemplates>
+    <workflow id="workflow-TS-cloudtest2">    <!-- SDK-TS-002 workflow -->
+        <workflowVersion>1.0</workflowVersion>
+        <node id="JOB1-Pre_process">         <!-- workflow node unique id -->
+            <job id="job1"></job>        <!-- job defined above -->
+            <sources>
+               <source refid="cas:series">http://sensyf.terradue.int/catalogue/search/LANDSAT_8/description</source> <!-- urls of the products to get from the catalogue -->
+            </sources>
+        </node>
+	<node id="JOB2-Data_process">         <!-- workflow node unique id -->
+            <job id="job2"></job>        <!-- job defined above -->
+            <sources>
+               <source refid="wf:node" >JOB1-Pre_process</source> <!-- the current job is a sequence of the job defined here -->
+            </sources>
+        </node>
+        <node id="JOB3-sensyf-mail">         <!-- workflow node unique id -->
+            <job id="job3"></job>        <!-- job defined above -->
+            <sources>
+               <source refid="wf:node" >JOB2-Data_process</source> <!-- the current job is a sequence of the job defined here -->
+            </sources>
+        </node>
+    </workflow>
+</application>

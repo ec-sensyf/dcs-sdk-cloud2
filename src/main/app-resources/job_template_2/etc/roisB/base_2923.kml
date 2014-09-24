@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>base</name>
+<Schema name="base" id="base">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<name>2923</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">2923</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.236144019925909,38.971806310006102,0 -8.236218111483661,38.971802659589301,0 -8.236717285939489,38.971826564632003,0 -8.23720371875444,38.971895357169302,0 -8.23769023189144,38.9720128037726,0 -8.23796163407372,38.972106879983798,0 -8.23797545890886,38.972117574342001,0 -8.238141858631421,38.972246294299097,0 -8.238330648562719,38.972338856828699,0 -8.23861457501102,38.972450645954297,0 -8.23878945765138,38.972504252149903,0 -8.238970633666449,38.972614315676502,0 -8.23932460894685,38.972888958096497,0 -8.239637526524829,38.973198777644498,0 -8.23970812861047,38.973289637705399,0 -8.236144019925909,38.971806310006102,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<name>2923</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">2923</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.24015657393865,38.9760820874789,0 -8.23985988518471,38.973484937112197,0 -8.239903253139071,38.973540748204101,0 -8.240109330112981,38.973897817867503,0 -8.240256487755261,38.974264243745097,0 -8.240349783324,38.974657842627401,0 -8.24038033930392,38.975045400792503,0 -8.24035130612037,38.975433771303003,0 -8.240260513381321,38.975824547804997,0 -8.24015657393865,38.9760820874789,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<name>2923</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">2923</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.23571260209771,38.971827564588502,0 -8.236144019925931,38.971806310006201,0 -8.239708128610459,38.973289637705399,0 -8.239859885184719,38.973484937112197,0 -8.24015657393864,38.9760820874789,0 -8.24015352282418,38.9760896474573,0 -8.240081493156881,38.976194683425703,0 -8.236213719954881,38.975050401415402,0 -8.23603575088857,38.9749721043761,0 -8.2325994758716,38.973460223412999,0 -8.232792565435719,38.9732104226293,0 -8.23310782714165,38.972895950900003,0 -8.233452541060361,38.9726262357389,0 -8.23386034262464,38.972375227617597,0 -8.23429447864946,38.972172181201699,0 -8.234743923946439,38.972014653859901,0 -8.23523142808086,38.971896361405001,0 -8.23571260209771,38.971827564588502,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>

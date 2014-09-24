@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# ============================================================================
+# $Id$
+#
+# $Revision$
+# $Date$
+# $LastChangedBy$
+# ============================================================================
+# DESCRIPTION
+# ============================================================================
+# PROJECT       : SenSyF
+# COMPANY       : DEIMOS Engenharia S.A.
+# COMPONENT     : Streaming Executables
+# LANGUAGE      : Bash
+# ----------------------------------------------------------------------------
+# PURPOSE
+#
+# This file is the streaming executable for the sensyf-mail.
+# ========================================================================== #
+
+# source the ciop functions (e.g. ciop-log)
+source ${ciop_job_include}
+
+# define the exit codes
+SUCCESS=0
+ERR_NOINPUT=1
+ERR_NOPARAMS=2
+ERR_GDAL=4
+ERR_PYTHON=6
+
+# add a trap to exit gracefully
+function cleanExit ()
+{
+   local retval=$?
+   local msg="" 
+   case "$retval" in
+     $SUCCESS)      msg="Processing successfully concluded";;
+     $ERR_NOPARAMS) msg="Outout format not defined";;
+     $ERR_GDAL)    msg="Graph processing of job ${JOBNAME} failed (exit code $res)";;
+     *)             msg="Unknown error";;
+   esac
+   [ "$retval" != "0" ] && ciop-log "ERROR" "Error $retval - $msg, processing aborted" || ciop-log "INFO" "$msg" 
+   exit $retval
+}
+trap cleanExit EXIT
+
+# retrieve the parameters value from workflow or job default value
+subject=`ciop-getparam subject`
+body=`ciop-getparam body`
+email_address=`ciop-getparam email_address`
+attachment=`ciop-getparam attachment`
+
+# run a check on the format value
+[ -z "$subject" ] && exit $ERR_NOPARAMS
+[ -z "$body" ] && exit $ERR_NOPARAMS
+[ -z "$email_address" ] && exit $ERR_NOPARAMS
+[ -z "$attachment" ] && exit $ERR_NOPARAMS
+
+# add tile-sat executable to PATH
+export PATH=/application/job_template_3/bin/:$PATH
+
+echo Published outputs: >> ./workflow_outputs.txt
+echo ' ' >> ./workflow_outputs.txt
+
+while read inputs_from_previous_job
+do
+    echo $inputs_from_previous_job >> ./workflow_outputs.txt
+done
+
+# run sensyf-mail
+sensyf-mail -s $subject -b $body -m $email_address -a ./workflow_outputs.txt
+[ "$?" == "0" ] || exit $ERR_PYTHON
+
+exit 0

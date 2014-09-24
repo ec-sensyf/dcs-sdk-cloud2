@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>base</name>
+<Schema name="base" id="base">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<name>3402</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">3402</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.22745420003762,38.986428196151799,0 -8.22902335188623,38.985427309436901,0 -8.22907394782769,38.985501680996101,0 -8.229427322385829,38.985826800102998,0 -8.22978284612342,38.9861113466484,0 -8.22976280191911,38.986127576551702,0 -8.22948561334017,38.986289840686503,0 -8.229178250432049,38.986421454503898,0 -8.228850568049991,38.986517531006299,0 -8.22850724698654,38.9865765258454,0 -8.22815391781924,38.986596750720103,0 -8.227802152814141,38.9865773575048,0 -8.227522392902181,38.9865300327494,0 -8.22745420003762,38.986428196151799,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<name>3402</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">3402</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.225858902585831,38.983989119022198,0 -8.22619913968998,38.984177361181402,0 -8.22679010247794,38.984431870275301,0 -8.22740907919162,38.984631408322699,0 -8.22806235706113,38.984777354275799,0 -8.228653997633421,38.984853794547597,0 -8.228784612440069,38.985076381153,0 -8.22902335188623,38.985427309436901,0 -8.22745420003764,38.986428196151799,0 -8.227308121634779,38.9862100471668,0 -8.227170890744549,38.985882868389403,0 -8.22697894291775,38.985555732605697,0 -8.22690568383625,38.985328111989404,0 -8.22634871477932,38.984823393245797,0 -8.22599615031867,38.984426972098497,0 -8.22583362614145,38.984521534728003,0 -8.225716402169089,38.984394640194402,0 -8.225788456794991,38.984137121424602,0 -8.225858902585831,38.983989119022198,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>

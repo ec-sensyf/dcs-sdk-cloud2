@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# ============================================================================                                                                                                     
+# $Id$                                                                                                                                                                             
+#                                                                                                                                                                                  
+# $Revision$                                                                                                                                                                       
+# $Date$                                                                                                                                                                           
+# $LastChangedBy$                                                                                                                                                                  
+# ============================================================================                                                                                                     
+# DESCRIPTION                                                                                                                                                                      
+# ============================================================================                                                                                                     
+# PROJECT       : SenSyF                                                                                                                                                           
+# COMPANY       : DEIMOS Engenharia S.A.                                                                                                                                           
+# COMPONENT     : Streaming Executables                                                                                                                                            
+# LANGUAGE      : Bash                                                                                                                                                             
+# ----------------------------------------------------------------------------                                                                                                     
+# PURPOSE                                                                                                                                                                          
+#                                                                                                                                                                                  
+# This file is the streaming executable for the Job 1 of SDK-TS-pilot 2.
+# ========================================================================== #                                                                                                     
+
+# source the ciop functions (e.g. ciop-log)
+source ${ciop_job_include}
+
+# define the exit codes
+SUCCESS=0
+ERR_NOINPUT=1
+ERR_NOPARAMS=2
+ERR_GDAL=4
+ERR_COPY=5
+ERR_PYTHON=6
+
+# add a trap to exit gracefully
+function cleanExit ()
+{
+   local retval=$?
+   local msg="" 
+   case "$retval" in
+     $SUCCESS)      msg="Processing successfully concluded";;
+     $ERR_NOPARAMS) msg="Outout format not defined";;
+     $ERR_GDAL)    msg="Graph processing of job ${JOBNAME} failed (exit code $res)";;
+     *)             msg="Unknown error";;
+   esac
+   [ "$retval" != "0" ] && ciop-log "ERROR" "Error $retval - $msg, processing aborted" || ciop-log "INFO" "$msg" 
+   exit $retval
+}
+trap cleanExit EXIT
+
+# retrieve the parameter value from workflow or job default value
+roisa=`ciop-getparam roisa`
+roisb=`ciop-getparam roisb`
+
+# run a check on the format value
+[ -z "$roisa" ] && exit $ERR_NOPARAMS
+[ -z "$roisb" ] && exit $ERR_NOPARAMS
+
+# read inputs
+while read inputs_from_catalogue
+    do
+	# publish tuples
+	echo $inputs_from_catalogue,$roisa | ciop-publish -s
+	echo $inputs_from_catalogue,$roisb | ciop-publish -s
+    done

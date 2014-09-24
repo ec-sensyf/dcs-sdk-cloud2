@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>base</name>
+<Schema name="base" id="base">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<name>3494</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">3494</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.40784716000473,38.985519627189397,0 -8.40765900609764,38.985653196920197,0 -8.40748227557766,38.985977876658701,0 -8.40747882903643,38.986002971575601,0 -8.407477066835771,38.986024882766301,0 -8.40743615154717,38.987761787710198,0 -8.407457423937711,38.9878158747293,0 -8.40747141836899,38.987832317131698,0 -8.407555216908699,38.9879909253074,0 -8.407081914553819,38.988041380149703,0 -8.40650776086988,38.985749231832898,0 -8.406723033499301,38.985702906956099,0 -8.40724174914318,38.985617684787798,0 -8.40784716000473,38.985519627189397,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>

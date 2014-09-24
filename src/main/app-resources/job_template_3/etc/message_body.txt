@@ -1,0 +1,3 @@
+The Demonstration Test tested on the Operational Cloud Environment was completed with success.
+
+SenSyF SDK - automatic email notification

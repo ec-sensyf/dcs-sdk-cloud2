@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>base</name>
+<Schema name="base" id="base">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<name>2019</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">2019</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.184716549761101,38.958567480163502,0 -8.182474271521709,38.956944304710902,0 -8.18247937795547,38.956864623797003,0 -8.18246289729429,38.956626619510899,0 -8.18390541357971,38.956560399049501,0 -8.186114290932091,38.958448335869001,0 -8.18633621892708,38.958627208649297,0 -8.186991598925189,38.959064119528698,0 -8.186642335635129,38.9589128037303,0 -8.186289741270111,38.958791625318398,0 -8.185914084685651,38.958693416520397,0 -8.185516214580399,38.958621066480397,0 -8.18512427727096,38.958579619563501,0 -8.184739085011721,38.9585666469358,0 -8.184716549761101,38.958567480163502,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>

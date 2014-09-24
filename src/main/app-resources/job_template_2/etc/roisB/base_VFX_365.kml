@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>base</name>
+<Schema name="base" id="base">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<name>VFX_365</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">VFX_365</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.929765,38.880927,0 -8.931394,38.881686,0 -8.931396,38.881691,0 -8.931399,38.881699,0 -8.931399,38.881707,0 -8.931398,38.881716,0 -8.931399,38.881726,0 -8.931398,38.881737,0 -8.931396,38.881749,0 -8.931394,38.881761,0 -8.931391,38.881771,0 -8.931385,38.881779,0 -8.931379,38.881788,0 -8.931377,38.881792,0 -8.929656,38.884053,0 -8.929649,38.884056,0 -8.92964,38.88406,0 -8.929628,38.884064,0 -8.929614,38.884065,0 -8.929601,38.884064,0 -8.929588,38.884063,0 -8.929574,38.884061,0 -8.929561,38.884057,0 -8.929547,38.884052,0 -8.929533,38.884047,0 -8.929521,38.884041,0 -8.929508,38.884033,0 -8.929496,38.884028,0 -8.927896,38.883233,0 -8.927888,38.883229,0 -8.927879,38.883222,0 -8.927871,38.883215,0 -8.927863,38.883207,0 -8.927859,38.883197,0 -8.927857,38.883188,0 -8.927857,38.883182,0 -8.929706,38.880899,0 -8.929711,38.880901,0 -8.929717,38.880904,0 -8.929722,38.880908,0 -8.92973,38.880913,0 -8.929742,38.880918,0 -8.92975,38.880922,0 -8.92976,38.880926,0 -8.929765,38.880927,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>

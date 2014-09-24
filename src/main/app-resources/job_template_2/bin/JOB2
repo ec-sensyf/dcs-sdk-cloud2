@@ -1,0 +1,239 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# ============================================================================
+# $Id$
+#
+# $Revision$
+# $Date$
+# $LastChangedBy$
+# ============================================================================
+# DESCRIPTION
+# ============================================================================
+# PROJECT       : SenSyF
+# COMPANY       : DEIMOS Engenharia S.A.
+# COMPONENT     : Validation Tests
+# LANGUAGE      : Python
+# ----------------------------------------------------------------------------
+# PURPOSE
+#
+# This file contains the development of the processing operation for the 
+# pilot Test Scenario 2 (reproject a input product and make crops for all
+# ROIs defined).
+# This script will run in parallel depending on the number of the input
+# tuples.
+# ========================================================================== #
+
+import os
+import sys
+from osgeo import gdal,gdal_array,ogr,osr
+import numpy
+import glob
+
+#!
+# The change_crs function generates reprojected data for all 
+# input products inside input directory.
+#
+# @param[in] inputTifFiles
+#      Vector containing the filepaths to all input products
+# @param[in] tempDir
+#      Directory where the temporary data will be placed
+#
+# @return
+#      Returns the output product
+#!
+
+def change_crs(input_raster_product, repDir):
+
+  inputName = os.path.basename(input_raster_product)
+  os.makedirs(repDir + inputName)
+  outputProduct = repDir + inputName
+  bandTifFiles = glob.glob(input_raster_product + "/*.TIF")
+  for j in range(len(bandTifFiles)):
+    bandName = os.path.basename(bandTifFiles[j]).rstrip('.TIF')
+    os.system('gdalwarp -t_srs EPSG:4326 -dstnodata 0 -q ' + bandTifFiles[j] + ' ' + outputProduct + '/' + bandName + '.TIF')
+
+  return outputProduct
+
+def check_intersection(roisPart, outputShpFile, name, rasterProduct, outputDir):
+
+  vectors = get_polygon_limits(outputShpFile)
+
+  polygon_min_X = min(vectors[0])
+  polygon_max_X = max(vectors[0])
+  polygon_min_Y = min(vectors[1])
+  polygon_max_Y = max(vectors[1])
+
+  productName = os.path.basename(rasterProduct)
+  outputPath = outputDir + productName + '_' + roisPart + '/' + name + '/'
+  os.makedirs(outputPath)
+  bandTifFiles = glob.glob(rasterProduct + "/*.TIF")
+  for i in range(len(bandTifFiles)):
+    bandName = os.path.basename(bandTifFiles[i]).rstrip('.TIF')
+    limits = get_raster_limits(bandTifFiles[i])
+    if limits[0]<=polygon_min_X<=limits[2] or limits[0]<=polygon_max_X<=limits[2]:
+      if limits[1]<=polygon_min_Y<=limits[3] or limits[1]<=polygon_max_Y<=limits[3]:
+        mean = zonal_stats(bandTifFiles[i], outputShpFile)
+        if mean != 0:
+            crop_ROI(outputPath, bandName, name, outputShpFile, bandTifFiles[i])
+  
+def crop_ROI(outputPath, bandName, name, outputShpFile, bandTifFile):
+
+  outputTifFile = outputPath + bandName + '_' + name + '.tif'
+  os.system('gdalwarp -t_srs EPSG:4326 -wo CUTLINE_ALL_TOUCHED=TRUE -dstnodata 0 -q -cutline ' + outputShpFile + ' -crop_to_cutline -of GTiff -overwrite ' +bandTifFile + ' ' + outputTifFile)
+
+def zonal_stats(input_value_raster, input_zone_polygon):
+
+    # Open data                                                                                                                                                                     
+    raster = gdal.Open(input_value_raster)
+    driver = ogr.GetDriverByName('KML')
+    shp = driver.Open(input_zone_polygon)
+    lyr = shp.GetLayer()
+
+    # Get raster georeference info                                                                                                                                                  
+    transform = raster.GetGeoTransform()
+    width = raster.RasterXSize
+    height = raster.RasterYSize
+    xOrigin = transform[0]
+    yOrigin = transform[3]
+    yend = transform[3] + width*transform[4] + height*transform[5]
+    xend = transform[0] + width*transform[1] + height*transform[2]
+    pixelWidth = transform[1]
+    pixelHeight = transform[5]
+
+    # Reproject geometry to same projection as raster                                                                                                                               
+    sourceSR = lyr.GetSpatialRef()
+    targetSR = osr.SpatialReference()
+    targetSR.ImportFromWkt(raster.GetProjectionRef())
+    coordTrans = osr.CoordinateTransformation(sourceSR,targetSR)
+    feat = lyr.GetNextFeature()
+    geom = feat.GetGeometryRef()
+    geom.Transform(coordTrans)
+
+    # Get extent of geometry                                                                                                                                                        
+    ring = geom.GetGeometryRef(0)
+    numpoints = ring.GetPointCount()
+    pointsX = []; pointsY = []
+    for p in range(numpoints):
+            lon, lat, z = ring.GetPoint(p)
+            pointsX.append(lon)
+            pointsY.append(lat)
+    xmin = min(pointsX)
+    xmax = max(pointsX)
+    ymin = min(pointsY)
+    ymax = max(pointsY)
+
+    #Check bounds                                                                                                                                                                   
+    if xmin < xOrigin:
+      xmin = xOrigin
+    if xmax > xend:
+      xmax = xend
+    if ymin < yend:
+      ymin = yend
+    if ymax > yOrigin:
+      ymax = yOrigin
+
+    # Specify offset and rows and columns to read                                                                                                                                   
+    xoff = int((xmin - xOrigin)/pixelWidth)
+    yoff = int((yOrigin - ymax)/pixelWidth)
+    xcount = int((xmax - xmin)/pixelWidth)+1
+    ycount = int((ymax - ymin)/pixelWidth)+1
+
+    # create memory target raster                                                                                                                                                   
+    target_ds = gdal.GetDriverByName('MEM').Create('', xcount, ycount, gdal.GDT_Byte)
+    target_ds.SetGeoTransform((
+        xmin, pixelWidth, 0,
+        ymax, 0, pixelHeight,
+    ))
+
+    # Create for target raster the same projection as for the value raster                                                                                                          
+    raster_srs = osr.SpatialReference()
+    raster_srs.ImportFromWkt(raster.GetProjectionRef())
+    target_ds.SetProjection(raster_srs.ExportToWkt())
+
+    # Rasterize zone polygon to raster                                                                                                                                              
+    gdal.RasterizeLayer(target_ds, [1], lyr, burn_values=[1])
+
+    # Read raster as arrays                                                                                                                                                         
+    banddataraster = raster.GetRasterBand(1)
+    dataraster = banddataraster.ReadAsArray(xoff, yoff, xcount, ycount).astype(numpy.float)
+
+    bandmask = target_ds.GetRasterBand(1)
+    datamask = bandmask.ReadAsArray(0, 0, xcount, ycount)
+
+    # Mask zone of raster                                                                                                                                                           
+    zoneraster = numpy.ma.masked_array(dataraster,  numpy.logical_not(datamask))
+
+    # Calculate mean of zonal raster                                                                                                                                                
+    return numpy.mean(zoneraster)
+
+def get_raster_limits(inputTifFile):
+
+    ds = gdal.Open(inputTifFile)
+    width = ds.RasterXSize
+    height = ds.RasterYSize
+    gt = ds.GetGeoTransform()
+    minx = gt[0]
+    miny = gt[3] + width*gt[4] + height*gt[5]
+    maxx = gt[0] + width*gt[1] + height*gt[2]
+    maxy = gt[3]
+
+    limits = [minx, miny, maxx, maxy]
+    return limits
+
+def get_polygon_limits(outputShpFile):
+
+    shapefile = ogr.Open(outputShpFile)
+    layer = shapefile.GetLayer(0)
+    feature = layer.GetFeature(0)
+    name = feature.GetField("NAME")
+    geometry = feature.GetGeometryRef()
+    ring = geometry.GetGeometryRef(0)
+
+    pointsX = []; pointsY = []; pointsZ = []
+    numpoints = ring.GetPointCount()
+
+    for p in range(numpoints):
+      lon, lat, z = ring.GetPoint(p)
+      pointsX.append(lon)
+      pointsY.append(lat)
+      pointsZ.append(z)
+
+    vectors = [pointsX, pointsY, pointsZ]
+    return vectors
+
+#!                                                                                                                                                                                
+# The function main calls the previous function in order to
+# define the process for the test scenario.
+#
+# @param[in] args
+#      Vector containing the command line arguments 
+#
+# @return
+#      There are no returns for this function
+#!         
+
+def main(args):
+
+  if len(sys.argv) != 4:
+    sys.exit('\nUsage: JOB2 <intput raster product> <ROIs directory> <output directory>\nExample:./JOB2 $INPUTPRODUCT $ROISDIR $OUTPUTDIR\n')
+
+  input_raster_product = args[1]
+  roisDir = args[2]
+  roisPart = os.path.basename(roisDir)
+  outputDir = args[3]
+  repDir='./reprojected_data/'
+  reprojected_product=change_crs(input_raster_product, repDir)
+  rois = glob.glob(roisDir + '/*.kml')
+  for i in range(len(rois)):
+    shapefile = ogr.Open(rois[i])
+    layer = shapefile.GetLayer(0)
+    feature = layer.GetFeature(0)
+    name = feature.GetField("NAME")
+    check_intersection(roisPart, rois[i], name, reprojected_product, outputDir)
+
+# MAIN #
+
+if __name__ == '__main__':
+
+  main(sys.argv)

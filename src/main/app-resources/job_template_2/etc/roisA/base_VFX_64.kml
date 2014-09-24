@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>base</name>
+<Schema name="base" id="base">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<name>VFX_64</name>
+	<description></description>
+	<Style><LineStyle><color>ff0000ff</color></LineStyle><PolyStyle><fill>0</fill></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#base">
+		<SimpleData name="Name">VFX_64</SimpleData>
+		<SimpleData name="Description"></SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-8.975229,38.938243,0 -8.973857,38.938823,0 -8.971917,38.939471,0 -8.968328,38.934427,0 -8.970986,38.932792,0 -8.973531,38.93611,0 -8.973739,38.936987,0 -8.973937,38.937191,0 -8.974091,38.937321,0 -8.974197,38.937407,0 -8.974404,38.937549,0 -8.974556,38.937642,0 -8.974752,38.937758,0 -8.974981,38.937877,0 -8.975229,38.938243,0</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>
