@@ -4,12 +4,12 @@
 
 This repository contains the second approach of the usecase to test the deployment on the operational cloud environment.
 
-*IDEA*: Get Landsat 8 data from the catalogue, for a defined region, and crop small ROIs defined on kml files.
+**IDEA**: Get Landsat 8 data from the catalogue, for a defined region, and crop small ROIs defined on kml files.
       The parallelization on this approach is performed by < product,half_of_the_ROIs > (half of the ROIs are cropped on each task) on Hadoop.
 
-*Use-case numbers*:
+**Use-case numbers**:
 
-*Regions of interest (ROIs)* - 3380 (1690 ROIs per task)
+**Regions of interest ** - 3380 (1690 ROIs per task)
 
 --------------
 
@@ -29,12 +29,12 @@ This repository contains the second approach of the usecase to test the deployme
 
 3. Run the following commands:
 
-```bash
-cd
-git clone git@github.com:ec-sensyf/dcs-sdk-cloud2.git
-cd dcs-sdk-cloud2
- mvn install
-```
+      ```bash
+      cd
+      git clone git@github.com:ec-sensyf/dcs-sdk-cloud2.git
+      cd dcs-sdk-cloud2
+      mvn install
+      ```
 
 --------------
 
