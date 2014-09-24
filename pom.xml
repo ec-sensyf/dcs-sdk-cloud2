@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>dcs.sdk.cloud.2</groupId>
+	<artifactId>dcs-sdk-cloud2</artifactId>
+	<name>dcs-sdk-cloud2</name>
+	<description>dcs-sdk-cloud2</description>
+	<version>1.0-SNAPSHOT</version>
+
+	<scm>
+		<connection>scm:git:git@github.com:ec-sensyf/dcs-sdk-cloud2.git</connection>
+		<developerConnection>scm:git:git@github.com:ec-sensyf/dcs-sdk-cloud2.git</developerConnection>
+		<url>https://github.com/ec-sensyf/dcs-sdk-cloud2</url>
+		<tag>HEAD</tag>
+	</scm>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.deploy.skip>true</maven.deploy.skip>
+		<github.global.server>github</github.global.server>
+		<github.site.repositoryName>dcs-sdk-cloud2</github.site.repositoryName>
+		<github.site.repositoryOwner>ec-sensyf</github.site.repositoryOwner>
+	</properties>
+	
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0</version>
+			</extension>
+		</extensions>
+		<plugins>
+
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>/application</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<excludes>
+						<exclude>.gitignore</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeTypes>jar</includeTypes>
+							<outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
+							<stripVersion>true</stripVersion>
+							<outputDirectory>${project.build.directory}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-app-resources</id>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>/application</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/app-resources</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>jar</goal>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>change perm</id>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<chmod dir="/application" includes="**/bin/*, **/run*"
+									perm="755" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.scm</groupId>
+						<artifactId>maven-scm-provider-gitexe</artifactId>
+						<version>1.9</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>de.jutzig</groupId>
+				<artifactId>github-release-plugin</artifactId>
+				<version>1.0.3</version>
+				<executions>
+					<execution>
+						<id>github-upload</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>release</goal>
+						</goals>
+						<inherited>false</inherited>
+						<configuration>
+							<releaseName>v${project.version}</releaseName>
+							<tag>v${project.version}</tag>
+							<artifact>${project.build.directory}/rpm/${project.artifactId}/RPMS/noarch/${project.artifactId}-${project.version}-ciop.noarch.rpm</artifact>
+							<overwriteArtifact>true</overwriteArtifact>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
